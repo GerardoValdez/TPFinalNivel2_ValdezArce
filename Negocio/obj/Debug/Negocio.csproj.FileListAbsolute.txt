@@ -1,0 +1,11 @@
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\bin\Debug\Negocio.dll
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\bin\Debug\Negocio.pdb
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\bin\Debug\AccesoDatos.dll
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\bin\Debug\Dominio.dll
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\bin\Debug\AccesoDatos.pdb
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\bin\Debug\Dominio.pdb
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\obj\Debug\Negocio.csproj.AssemblyReference.cache
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\obj\Debug\Negocio.csproj.CoreCompileInputs.cache
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\obj\Debug\Negocio.csproj.CopyComplete
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\obj\Debug\Negocio.dll
+C:\Users\ger4r\OneDrive\Escritorio\TPFinalNivel2_ValdezArce\Negocio\obj\Debug\Negocio.pdb
