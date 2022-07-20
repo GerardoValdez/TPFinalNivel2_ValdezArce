@@ -32,30 +32,50 @@ namespace Presentacion
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            cargarForm();
-            dgvArticulos.Columns["ImagenUrl"].Visible = false;
-        }
-
-        private void cargarForm()
-        {
             articuloNegocio articuloNegocio = new articuloNegocio();
-
             try
             {
+                
                 listaArticulos = articuloNegocio.listar();
                 dgvArticulos.DataSource = listaArticulos;
+                cargarImagen(listaArticulos[0].ImagenUrl);
+                dgvArticulos.Columns["ImagenUrl"].Visible = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+
+                 MessageBox.Show(ex.ToString());
             }
-            
         }
+
+
+        private void dgvArticulos_SelectionChanged(object sender, EventArgs e)
+        {
+            Articulo seleccionado = (Articulo)dgvArticulos.CurrentRow.DataBoundItem;
+            cargarImagen(seleccionado.ImagenUrl);
+        }
+
+        private void cargarImagen(string imagen)
+        {
+            try
+            {
+                
+                pbxArticulos.Load(imagen);
+            }
+            catch (Exception )
+            {
+                pbxArticulos.Load("http://www.carsaludable.com.ar/wp-content/uploads/2014/03/default-placeholder.png"); 
+            }
+        }
+
+
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             frmAltaArticulo alta= new frmAltaArticulo();          
             alta.ShowDialog();
         }
+
+       
     }
 }

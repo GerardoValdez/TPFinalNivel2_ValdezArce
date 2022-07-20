@@ -19,7 +19,7 @@ namespace Negocio
             try
             {
                 datos.setearConsulta("select Codigo, Nombre, A.Descripcion Descripcion, C.Descripcion Categoría, M.Descripcion Marca, ImagenUrl, Precio From ARTICULOS A join CATEGORIAS C on A.IdCategoria = C.Id join MARCAS M on A.IdMarca = M.Id");
-                datos.ejecutarConsulta();
+                datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
                 {
@@ -34,7 +34,13 @@ namespace Negocio
                     aux.Marca = new Marca();
                     aux.Marca.Descripcion = (string)datos.Lector["Marca"];
 
+                    if (!(datos.Lector["ImagenUrl"] is DBNull))
                     aux.ImagenUrl = (string)datos.Lector["ImagenUrl"];
+
+
+
+
+
                     aux.Precio = (decimal)datos.Lector["Precio"];
                     
 
@@ -56,8 +62,18 @@ namespace Negocio
             Acceso acceso = new Acceso();
             try
             {
-                acceso.setearConsulta("Insert Into ARTICULOS");
-                acceso.ejecutarConsulta();
+                acceso.setearConsulta("Insert Into ARTICULOS(Codigo, Nombre, Descripcion, IdCategoria, IdMarca, imagenUrl, Precio )" +
+                                                   "Values(@Codigo, @Nombre, @Descripcion, @IdCategoria, @IdMarca, @imagenUrl, @Precio)");
+                
+                acceso.setearParametro("@Codigo",nuevoArticulo.Codigo);
+                acceso.setearParametro("@Nombre", nuevoArticulo.Nombre);
+                acceso.setearParametro("@Descripcion", nuevoArticulo.Descripcion);
+                acceso.setearParametro("@IdCategoria", nuevoArticulo.Categoria.Id);
+                acceso.setearParametro("@IdMarca", nuevoArticulo.Marca.Id);
+                acceso.setearParametro("@imagenUrl", nuevoArticulo.ImagenUrl);
+                acceso.setearParametro("@Precio", nuevoArticulo.Precio);
+                acceso.ejecutarNoQuery();
+
             }
             catch (Exception)
             {

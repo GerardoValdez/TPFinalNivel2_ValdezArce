@@ -31,7 +31,7 @@ namespace AccesoDatos
             comando.CommandText = consulta;
         }
        
-        public void ejecutarConsulta()
+        public void ejecutarLectura()
         {
             comando.Connection = conexion;
 
@@ -46,6 +46,24 @@ namespace AccesoDatos
                 throw ex;
             }           
         }
+
+        public void ejecutarNoQuery()
+        {
+            comando.Connection = conexion;
+
+            try
+            {
+                conexion.Open();
+                comando.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public void cerrarConexion()
         {
             if(lector != null)
@@ -54,5 +72,12 @@ namespace AccesoDatos
                 conexion.Close();
             }
         }
+
+         
+        public void setearParametro(string nombre, object valor)
+        {
+            comando.Parameters.AddWithValue(nombre, valor);
+        }
+
     }
 }

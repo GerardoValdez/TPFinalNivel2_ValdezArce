@@ -32,7 +32,7 @@ namespace Presentacion
                 nuevoArticulo.Descripcion = txtDescripcion.Text;
                 nuevoArticulo.Categoria = (Categoria)cboCategoria.SelectedItem;
                 nuevoArticulo.Marca = (Marca)cboMarca.SelectedItem;
-                nuevoArticulo.ImagenUrl = txtImagen.Text;
+                nuevoArticulo.ImagenUrl = txtImagen.Text;  
                 nuevoArticulo.Precio = decimal.Parse(txtPrecio.Text);
 
                 negocio.agregar(nuevoArticulo);
@@ -51,7 +51,7 @@ namespace Presentacion
             categoriaNegocio negocioC = new categoriaNegocio();
             marcaNegocio negocioM = new marcaNegocio();
 
-            try
+            try 
             {
                 cboCategoria.DataSource = negocioC.listar();
                 cboMarca.DataSource = negocioM.listar();
@@ -63,6 +63,32 @@ namespace Presentacion
                 MessageBox.Show(ex.ToString());
             }
 
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            if(MessageBox.Show("¿Está por salir de esta ventana?","CANCELAR OPERACIÓN",MessageBoxButtons.OKCancel, MessageBoxIcon.Question,MessageBoxDefaultButton.Button2)== DialogResult.OK)
+            {
+                Close();
+            }
+        }
+
+        private void txtImagen_Leave(object sender, EventArgs e)
+        {
+            cargarImagen(txtImagen.Text);
+        }
+
+        private void cargarImagen(string imagen)
+        {
+            try
+            {
+
+                 ptbAltaArticulo.Load(imagen);
+            }
+            catch (Exception)
+            {
+                ptbAltaArticulo.Load("http://www.carsaludable.com.ar/wp-content/uploads/2014/03/default-placeholder.png");
+            }
         }
     }
 }
