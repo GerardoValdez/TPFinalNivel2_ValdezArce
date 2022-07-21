@@ -15,29 +15,51 @@ namespace Presentacion
 {
     public partial class frmAltaArticulo : Form
     {
+        Articulo articulo = null;
+
         public frmAltaArticulo()
         {
             InitializeComponent();
         }
 
+        public frmAltaArticulo(Articulo seleccionado)
+        {
+            InitializeComponent();
+            Text = "Modificar Artículo";
+            articulo = seleccionado;
+
+        }
+
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            Articulo nuevoArticulo = new Articulo();
+             
             articuloNegocio negocio = new articuloNegocio();
 
             try
             {
-                nuevoArticulo.Codigo = txtCodigo.Text;
-                nuevoArticulo.Nombre = txtNombre.Text;
-                nuevoArticulo.Descripcion = txtDescripcion.Text;
-                nuevoArticulo.Categoria = (Categoria)cboCategoria.SelectedItem;
-                nuevoArticulo.Marca = (Marca)cboMarca.SelectedItem;
-                nuevoArticulo.ImagenUrl = txtImagen.Text;  
-                nuevoArticulo.Precio = decimal.Parse(txtPrecio.Text);
+                if(articulo == null)
+                   articulo = new Articulo();
+                articulo.Codigo = txtCodigo.Text;
+                articulo.Nombre = txtNombre.Text;
+                articulo.Descripcion = txtDescripcion.Text;
+                articulo.Categoria = (Categoria)cboCategoria.SelectedItem;
+                articulo.Marca = (Marca)cboMarca.SelectedItem;
+                articulo.ImagenUrl = txtImagen.Text;
+                articulo.Precio = decimal.Parse(txtPrecio.Text);
 
-                negocio.agregar(nuevoArticulo);
 
-                MessageBox.Show("Se agregó el artículo correctamente");
+                if(articulo.Id != 0)
+                {
+                    negocio.modificar(articulo);
+                    MessageBox.Show("Se modificó el artículo correctamente");
+                }
+                else
+                {
+                    negocio.agregar(articulo);
+                    MessageBox.Show("Se agregó el artículo correctamente");
+                }
+
+                Close();
             }
             catch (Exception ex)
             {
@@ -54,7 +76,30 @@ namespace Presentacion
             try 
             {
                 cboCategoria.DataSource = negocioC.listar();
+                cboCategoria.ValueMember = "Id";
+                cboCategoria.DisplayMember = "Descripcion";
+
                 cboMarca.DataSource = negocioM.listar();
+                cboMarca.ValueMember = "Id";
+                cboMarca.DisplayMember = "Descripcion";
+
+               
+
+                if (articulo!= null)
+                {
+                    txtCodigo.Text = articulo.Codigo;
+                    txtNombre.Text = articulo.Nombre;
+                    txtDescripcion.Text = articulo.Descripcion;
+
+                    txtImagen.Text = articulo.ImagenUrl;
+                    cargarImagen(articulo.ImagenUrl);
+                    txtPrecio.Text = articulo.Precio.ToString();
+
+                    cboCategoria.SelectedValue = articulo.Categoria.Id;
+                    cboMarca.SelectedValue = articulo.Marca.Id;
+
+
+                }
 
             }
             catch (Exception ex)

@@ -18,20 +18,23 @@ namespace Negocio
 
             try
             {
-                datos.setearConsulta("select Codigo, Nombre, A.Descripcion Descripcion, C.Descripcion Categoría, M.Descripcion Marca, ImagenUrl, Precio From ARTICULOS A join CATEGORIAS C on A.IdCategoria = C.Id join MARCAS M on A.IdMarca = M.Id");
+                datos.setearConsulta("select  A.Id, Codigo, Nombre, A.Descripcion Descripcion, C.Descripcion Categoría, A.idCategoria, M.Descripcion Marca, A.idMarca, ImagenUrl, Precio From ARTICULOS A join CATEGORIAS C on A.IdCategoria = C.Id join MARCAS M on A.IdMarca = M.Id");
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
                 {
                     Articulo aux = new Articulo();
+                    aux.Id = (int)datos.Lector["Id"];
                     aux.Codigo = (string)datos.Lector["Codigo"];
                     aux.Nombre = (string)datos.Lector["Nombre"];
                     aux.Descripcion = (string)datos.Lector["Descripcion"];
 
                     aux.Categoria = new Categoria();
+                    aux.Categoria.Id = (int)datos.Lector["IdCategoria"];
                     aux.Categoria.Descripcion = (string)datos.Lector["Categoría"];
 
                     aux.Marca = new Marca();
+                    aux.Marca.Id = (int)datos.Lector["IdMarca"];
                     aux.Marca.Descripcion = (string)datos.Lector["Marca"];
 
                     if (!(datos.Lector["ImagenUrl"] is DBNull))
@@ -55,6 +58,37 @@ namespace Negocio
             }
             
             
+        }
+
+        public void modificar(Articulo modificado)
+        {
+            Acceso acceso = new Acceso();
+
+            try
+            {
+                acceso.setearConsulta("UPDATE ARTICULOS SET Codigo = @Codigo, Nombre = @Nombre, Descripcion = @Descripcion, IdCategoria = @IdCategoria, IdMarca = @IdMarca, imagenUrl = @imagenUrl, Precio = @Precio WHERE Id = @Id ");
+
+                acceso.setearParametro("@Codigo", modificado.Codigo);
+                acceso.setearParametro("@Nombre", modificado.Nombre);
+                acceso.setearParametro("@Descripcion", modificado.Descripcion);
+                acceso.setearParametro("@IdCategoria", modificado.Categoria.Id);
+                acceso.setearParametro("@IdMarca", modificado.Marca.Id);
+                acceso.setearParametro("@imagenUrl", modificado.ImagenUrl);
+                acceso.setearParametro("@Precio", modificado.Precio);
+                acceso.setearParametro("@Id", modificado.Id);
+
+                acceso.ejecutarNoQuery();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            finally
+            {
+                acceso.cerrarConexion();
+            }
         }
 
         public void agregar(Articulo nuevoArticulo)

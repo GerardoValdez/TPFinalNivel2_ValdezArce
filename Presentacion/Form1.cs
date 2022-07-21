@@ -32,22 +32,27 @@ namespace Presentacion
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            cargarFormulario();
+        }
+
+        private void cargarFormulario()
+        {
             articuloNegocio articuloNegocio = new articuloNegocio();
             try
             {
-                
+
                 listaArticulos = articuloNegocio.listar();
                 dgvArticulos.DataSource = listaArticulos;
                 cargarImagen(listaArticulos[0].ImagenUrl);
                 dgvArticulos.Columns["ImagenUrl"].Visible = false;
+                dgvArticulos.Columns["Id"].Visible = false;
             }
             catch (Exception ex)
             {
 
-                 MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString());
             }
         }
-
 
         private void dgvArticulos_SelectionChanged(object sender, EventArgs e)
         {
@@ -74,8 +79,19 @@ namespace Presentacion
         {
             frmAltaArticulo alta= new frmAltaArticulo();          
             alta.ShowDialog();
+            cargarFormulario();
+
         }
 
-       
+        private void btnEditar_Click(object sender, EventArgs e)
+        {
+            Articulo seleccionado;
+
+            seleccionado = (Articulo)dgvArticulos.CurrentRow.DataBoundItem;
+
+            frmAltaArticulo modificar = new frmAltaArticulo(seleccionado);
+            modificar.ShowDialog();
+            cargarFormulario();
+        }
     }
 }
