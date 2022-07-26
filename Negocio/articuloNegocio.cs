@@ -39,7 +39,7 @@ namespace Negocio
 
                     if (!(datos.Lector["ImagenUrl"] is DBNull))
                     aux.ImagenUrl = (string)datos.Lector["ImagenUrl"];
-                    aux.Precio = (decimal)datos.Lector["Precio"];
+                    aux.Precio = (decimal)decimal.ToDouble((decimal)datos.Lector["Precio"]);
                     
 
                     listaArticulos.Add(aux);

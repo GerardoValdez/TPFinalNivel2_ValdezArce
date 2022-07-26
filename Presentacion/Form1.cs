@@ -164,12 +164,36 @@ namespace Presentacion
                 MessageBox.Show("Seleccionar el criterio para filtrar");
                 return true;
             }
-        }
 
-        private bool soloNumeros()
-        {
+            if(cboCampo.SelectedItem.ToString() == "Precio")
+            {
+                if (string.IsNullOrEmpty(txtFiltro.Text))
+                {
+                    MessageBox.Show("Debe ingresar números para realizar la busqueda");
+                    return true;
+                }
+                if (!(soloNumeros(txtFiltro.Text)))
+                {
+                    MessageBox.Show("Sólo se permiten números enteros");
+                    return true;
+                }
+            }
+     
             return false;
         }
+
+        private bool soloNumeros(string cadena)
+        {
+            foreach ( char caracter in cadena)
+            {
+                if (!(char.IsNumber(caracter)))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {

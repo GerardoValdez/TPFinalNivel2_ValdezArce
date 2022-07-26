@@ -33,40 +33,72 @@ namespace Presentacion
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
+            if (validar())
+            {
+                articuloNegocio negocio = new articuloNegocio();
+
+                try
+                {
+                    if (articulo == null)
+                        articulo = new Articulo();
+                    articulo.Codigo = txtCodigo.Text;
+                    articulo.Nombre = txtNombre.Text;
+                    articulo.Descripcion = txtDescripcion.Text;
+                    articulo.Categoria = (Categoria)cboCategoria.SelectedItem;
+                    articulo.Marca = (Marca)cboMarca.SelectedItem;
+                    articulo.ImagenUrl = txtImagen.Text;
+                    articulo.Precio = decimal.Parse(txtPrecio.Text);
+
+
+
+                    if (articulo.Id != 0)
+                    {
+                        negocio.modificar(articulo);
+                        MessageBox.Show("Se modificó el artículo correctamente");
+                    }
+                    else
+                    {
+                        negocio.agregar(articulo);
+                        MessageBox.Show("Se agregó el artículo correctamente");
+                    }
+
+                    Close();
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show(ex.ToString());
+                }
+            } 
+            
+        }
+
+        private bool validar()
+        {
+            bool validado = true;
+
+
+            if (string.IsNullOrEmpty(txtCodigo.Text) || string.IsNullOrEmpty(txtNombre.Text) || string.IsNullOrEmpty(txtPrecio.Text) || cboCategoria.SelectedIndex < 0 || cboMarca.SelectedIndex < 0)
+            {
+                validado = false;
+                MessageBox.Show("Debe ingresar un código, un nombre, un precio, seleccionar categoría y marca para agregar un artículo nuevo","ERROR",MessageBoxButtons.OK,MessageBoxIcon.Error);
              
-            articuloNegocio negocio = new articuloNegocio();
+            }
 
-            try
-            {
-                if(articulo == null)
-                   articulo = new Articulo();
-                articulo.Codigo = txtCodigo.Text;
-                articulo.Nombre = txtNombre.Text;
-                articulo.Descripcion = txtDescripcion.Text;
-                articulo.Categoria = (Categoria)cboCategoria.SelectedItem;
-                articulo.Marca = (Marca)cboMarca.SelectedItem;
-                articulo.ImagenUrl = txtImagen.Text;
-                articulo.Precio = decimal.Parse(txtPrecio.Text);
-
-
-                if(articulo.Id != 0)
+            if (!(string.IsNullOrEmpty(txtPrecio.Text)))
+                try
                 {
-                    negocio.modificar(articulo);
-                    MessageBox.Show("Se modificó el artículo correctamente");
+                    decimal.Parse(txtPrecio.Text);
                 }
-                else
+                catch (Exception)
                 {
-                    negocio.agregar(articulo);
-                    MessageBox.Show("Se agregó el artículo correctamente");
+                    validado = false;
+                    MessageBox.Show("Debe ingresar números en el precio del artículo", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtPrecio.Focus();
                 }
 
-                Close();
-            }
-            catch (Exception ex)
-            {
+            return validado;
 
-                MessageBox.Show(ex.ToString());
-            }
         }
 
         private void frmAltaArticulo_Load(object sender, EventArgs e)
