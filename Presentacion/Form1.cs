@@ -33,6 +33,11 @@ namespace Presentacion
         private void Form1_Load(object sender, EventArgs e)
         {
             cargarFormulario();
+            cboCampo.Items.Add("Código");
+            cboCampo.Items.Add("Nombre");
+            cboCampo.Items.Add("Descripción");
+            cboCampo.Items.Add("Precio");
+
         }
 
         private void cargarFormulario()
@@ -40,12 +45,11 @@ namespace Presentacion
             articuloNegocio articuloNegocio = new articuloNegocio();
             try
             {
-
                 listaArticulos = articuloNegocio.listar();
                 dgvArticulos.DataSource = listaArticulos;
+                ocultarColumnas();
                 cargarImagen(listaArticulos[0].ImagenUrl);
-                dgvArticulos.Columns["ImagenUrl"].Visible = false;
-                dgvArticulos.Columns["Id"].Visible = false;
+               
             }
             catch (Exception ex)
             {
@@ -54,9 +58,15 @@ namespace Presentacion
             }
         }
 
-        private void dgvArticulos_SelectionChanged(object sender, EventArgs e)
+        private void ocultarColumnas()
         {
-            Articulo seleccionado = (Articulo)dgvArticulos.CurrentRow.DataBoundItem;
+            dgvArticulos.Columns["ImagenUrl"].Visible = false;
+            dgvArticulos.Columns["Id"].Visible = false;
+        }
+
+        private void dgvArticulos_SelectionChanged(object sender, EventArgs e)
+        {    
+            Articulo seleccionado = (Articulo)dgvArticulos.CurrentRow.DataBoundItem;         
             cargarImagen(seleccionado.ImagenUrl);
         }
 
@@ -86,12 +96,102 @@ namespace Presentacion
         private void btnEditar_Click(object sender, EventArgs e)
         {
             Articulo seleccionado;
+            
+            if(dgvArticulos.CurrentRow != null)
+            {
+                seleccionado = (Articulo)dgvArticulos.CurrentRow.DataBoundItem;
 
-            seleccionado = (Articulo)dgvArticulos.CurrentRow.DataBoundItem;
+                frmAltaArticulo modificar = new frmAltaArticulo(seleccionado);
+                modificar.ShowDialog();
+                cargarFormulario();
+            }
+         
+        }
 
-            frmAltaArticulo modificar = new frmAltaArticulo(seleccionado);
-            modificar.ShowDialog();
-            cargarFormulario();
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            articuloNegocio negocio = new articuloNegocio();
+            Articulo seleccionado;
+
+            try
+            {
+                if(MessageBox.Show("El registro se eliminará del programa y de la Base de Datos. ¿Desea continuar?","",MessageBoxButtons.OKCancel,MessageBoxIcon.Warning,MessageBoxDefaultButton.Button2) == DialogResult.OK)
+                {
+                    seleccionado = (Articulo)dgvArticulos.CurrentRow.DataBoundItem;
+                    negocio.eliminar(seleccionado.Id);
+                    cargarFormulario();
+                }
+                
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void cboCampo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string opcion = cboCampo.SelectedItem.ToString();
+            
+            if(opcion == "Precio")
+            {
+                cboCriterio.Items.Clear();
+                cboCriterio.Items.Add("Mayor a");
+                cboCriterio.Items.Add("Menor a");
+                cboCriterio.Items.Add("Igual a");
+
+            }
+            else
+            {
+                cboCriterio.Items.Clear();
+                cboCriterio.Items.Add("Comienza con");
+                cboCriterio.Items.Add("Termina con");
+                cboCriterio.Items.Add("Contiene");
+            }
+        }
+
+        private bool validarFiltro()
+        {
+            if (cboCampo.SelectedIndex < 0)
+            {
+                MessageBox.Show("Seleccionar el campo para filtrar");
+                return true;
+            }
+
+            if (cboCriterio.SelectedIndex < 0)
+            {
+                MessageBox.Show("Seleccionar el criterio para filtrar");
+                return true;
+            }
+        }
+
+        private bool soloNumeros()
+        {
+            return false;
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            articuloNegocio negocio = new articuloNegocio();
+
+            try
+            {
+                if (validarFiltro())
+                    return;
+
+                string campo = cboCampo.SelectedItem.ToString();
+                string criterio = cboCriterio.SelectedItem.ToString();
+                string filtro = txtFiltro.Text;
+                dgvArticulos.DataSource = negocio.filtar(campo,criterio,filtro);
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
+            
         }
     }
 }

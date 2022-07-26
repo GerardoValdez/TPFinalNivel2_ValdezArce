@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Dominio;
 using Negocio;
 using AccesoDatos;
+using System.IO;
 
 namespace Presentacion
 {
@@ -19,7 +20,7 @@ namespace Presentacion
 
         public frmAltaArticulo()
         {
-            InitializeComponent();
+            InitializeComponent();      
         }
 
         public frmAltaArticulo(Articulo seleccionado)
@@ -83,7 +84,10 @@ namespace Presentacion
                 cboMarca.ValueMember = "Id";
                 cboMarca.DisplayMember = "Descripcion";
 
-               
+                cboCategoria.SelectedIndex = -1;
+                cboMarca.SelectedIndex = -1;
+
+
 
                 if (articulo!= null)
                 {

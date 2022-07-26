@@ -39,11 +39,6 @@ namespace Negocio
 
                     if (!(datos.Lector["ImagenUrl"] is DBNull))
                     aux.ImagenUrl = (string)datos.Lector["ImagenUrl"];
-
-
-
-
-
                     aux.Precio = (decimal)datos.Lector["Precio"];
                     
 
@@ -118,6 +113,134 @@ namespace Negocio
             finally
             {
                 acceso.cerrarConexion();
+            }
+        }
+
+        public void eliminar(int id)
+        {
+            try
+            {
+                Acceso acceso = new Acceso();
+                acceso.setearConsulta("DELETE FROM Articulos where Id = @Id" );
+                acceso.setearParametro("@Id",id);
+                acceso.ejecutarNoQuery();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public List<Articulo> filtar(string campo, string criterio, string filtro)
+        {
+            List<Articulo> listaFiltrada = new List<Articulo>();
+            Acceso acceso = new Acceso();
+
+            try
+            { string consulta = "select  A.Id, Codigo, Nombre, A.Descripcion Descripcion, C.Descripcion Categoría, A.idCategoria, M.Descripcion Marca, A.idMarca, ImagenUrl, Precio From ARTICULOS A join CATEGORIAS C on A.IdCategoria = C.Id join MARCAS M on A.IdMarca = M.Id Where ";
+
+                switch (campo)
+                {
+                    case "Código":
+                        switch (criterio)
+                        {
+                            case "Comienza con":
+                                consulta += "Codigo like '" + filtro + "%' ";
+                                break;
+
+                            case "Termina con":
+                                consulta += "Codigo like '%" + filtro + "' ";
+                                break;
+
+                            case "Contiene":
+                                consulta += "Codigo like '%" + filtro + "%'";
+                                break;
+                        }
+                        break;
+
+                    case "Nombre":
+                        switch (criterio)
+                        {
+                            case "Comienza con":
+                                consulta += "Nombre like '" + filtro + "%' ";                               
+                                break;
+
+                            case "Termina con":
+                                consulta += "Nombre like '%" + filtro + "' ";
+                                break;
+
+                            case "Contiene":
+                                consulta += "Nombre like '%" + filtro + "%'";
+                                break;
+                        }
+                        break;
+
+                    case "Descripción":
+                        switch (criterio)
+                        {
+                            case "Comienza con":
+                                consulta += "A.Descripcion like '" + filtro + "%' ";                             
+                                break;
+
+                            case "Termina con":
+                                consulta += "A.Descripcion like '%" + filtro + "' ";
+                                break;
+
+                            case "Contiene":
+                                consulta += "A.Descripcion like '%" + filtro + "%' ";
+                                break;
+                        }
+                        break;
+
+                    case "Precio":
+                        switch (criterio)
+                        {
+                            case "Mayor a":
+                                consulta += "Precio > " + filtro;
+                                break;
+
+                            case "Menor a":
+                                consulta += "Precio < " + filtro;
+                                break;
+
+                            case "Igual a":
+                                consulta += "Precio = " + filtro;
+                                break;
+                        }
+                        break;
+                }
+                acceso.setearConsulta(consulta);
+                acceso.ejecutarLectura();
+
+                while (acceso.Lector.Read())
+                {
+                    Articulo aux = new Articulo();
+                    aux.Id = (int)acceso.Lector["Id"];
+                    aux.Codigo = (string)acceso.Lector["Codigo"];
+                    aux.Nombre = (string)acceso.Lector["Nombre"];
+                    aux.Descripcion = (string)acceso.Lector["Descripcion"];
+
+                    aux.Categoria = new Categoria();
+                    aux.Categoria.Id = (int)acceso.Lector["IdCategoria"];
+                    aux.Categoria.Descripcion = (string)acceso.Lector["Categoría"];
+
+                    aux.Marca = new Marca();
+                    aux.Marca.Id = (int)acceso.Lector["IdMarca"];
+                    aux.Marca.Descripcion = (string)acceso.Lector["Marca"];
+
+                    if (!(acceso.Lector["ImagenUrl"] is DBNull))
+                        aux.ImagenUrl = (string)acceso.Lector["ImagenUrl"];
+                    aux.Precio = (decimal)acceso.Lector["Precio"];
+
+                    listaFiltrada.Add(aux);
+                }
+                return listaFiltrada;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
             }
         }
     }
