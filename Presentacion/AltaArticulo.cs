@@ -78,10 +78,10 @@ namespace Presentacion
             bool validado = true;
 
 
-            if (string.IsNullOrEmpty(txtCodigo.Text) || string.IsNullOrEmpty(txtNombre.Text) || string.IsNullOrEmpty(txtPrecio.Text) || cboCategoria.SelectedIndex < 0 || cboMarca.SelectedIndex < 0)
+            if (string.IsNullOrEmpty(txtCodigo.Text) || string.IsNullOrEmpty(txtNombre.Text) || string.IsNullOrEmpty(txtDescripcion.Text) || string.IsNullOrEmpty(txtImagen.Text) || string.IsNullOrEmpty(txtPrecio.Text) || cboCategoria.SelectedIndex < 0 || cboMarca.SelectedIndex < 0)
             {
                 validado = false;
-                MessageBox.Show("Debe ingresar un código, un nombre, un precio, seleccionar categoría y marca para agregar un artículo nuevo","ERROR",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Debe completar todos los campos solicitados. Además seleccionar categoría y marca para agregar o modificar un artículo","ERROR",MessageBoxButtons.OK,MessageBoxIcon.Error);
              
             }
 
